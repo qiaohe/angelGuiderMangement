@@ -30,7 +30,7 @@ module.exports = {
         if (req.query.name) conditions.push('name like \'%' + req.query.name + '%\'');
         if (req.query.provId) conditions.push('provId=\'' + req.query.provId + '\'');
         if (!!req.query.agency) conditions.push('agency=\'' + req.query.agency + '\'');
-        conditions.push(!!req.query.onlyAgency ? 'agency is null' : 'agency is not null');
+        conditions.push((req.query.onlyAgency && +req.query.onlyAgency ==1) ? 'agency is null' : 'agency is not null');
         if (req.query.cityId) conditions.push('cityId=\'' + req.query.cityId + '\'');
         if (req.query.status) conditions.push('status=\'' + req.query.status + '\'');
         angelGuiderDAO.findAll({
