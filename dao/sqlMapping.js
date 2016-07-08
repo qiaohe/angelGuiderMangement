@@ -12,6 +12,7 @@ module.exports = {
     angelGuider: {
         insert: 'insert AngelGuider set ?',
         findAll: 'select SQL_CALC_FOUND_ROWS * from AngelGuider',
-        findByMobile: 'select * from AngelGuider where mobile = ?'
+        findByMobile: 'select * from AngelGuider where mobile = ?',
+        findAgents: 'select id, realName, name from AngelGuider where agency is null'
     }
 }

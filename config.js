@@ -4,7 +4,7 @@ module.exports = {
     server: {
         name: 'angel guider management',
         version: '0.0.1',
-        host: 'localhost',
+        host: '121.42.171.213',
         port: 8090
     },
     db: {

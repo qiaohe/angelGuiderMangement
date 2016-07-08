@@ -67,5 +67,11 @@ module.exports = [
         path: "/api/angelGuiders",
         handler: angelGuiderController.getAngelGuiders,
         secured: 'user'
-    }
+    },
+    {
+        method: "get",
+        path: "/api/agents",
+        handler: angelGuiderController.getAgents,
+        secured: 'user'
+    },
 ];

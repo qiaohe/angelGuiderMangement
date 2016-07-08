@@ -47,6 +47,14 @@ module.exports = {
             res.send({ret: 1, message: err.message});
         });
         return next();
+    },
+    getAgents: function (req, res, next) {
+        angelGuiderDAO.findAgents().then(function (agents) {
+            res.send({ret: 0, data: agents});
+        }).catch(function (err) {
+            res.send({ret: 1, err: err.message});
+        });
+        return next();
     }
 }
 

@@ -16,5 +16,8 @@ module.exports = {
     },
     findByMobile: function (mobile) {
         return db.query(sqlMapping.angelGuider.findByMobile, mobile)
+    },
+    findAgents: function(){
+        return db.query(sqlMapping.angelGuider.findAgents)
     }
 }
