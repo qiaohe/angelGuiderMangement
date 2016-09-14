@@ -18,6 +18,9 @@ module.exports = {
             if (user.password != md5(password)) throw new Error(i18n.get('member.password.error'));
             var token = uuid.v4();
             redis.set('angel:admin:' + token, JSON.stringify(user));
+            // redis.getAsync('angel:admin:' + token).then(function(res) {
+            //     console.log('angel:admin:',res);
+            // });
             redis.expire('angel:admin:' + token, config.app.tokenExpire);
             user.token = token;
             res.send({ret: 0, data: user});
@@ -52,6 +55,58 @@ module.exports = {
             redis.expire('angel:admin:' + token, config.app.tokenExpire);
             user.token = token;
             res.send({ret: 0, data: user});
+        }).catch(function (err) {
+            res.send({ret: 1, message: err.message});
+        });
+        return next();
+    },
+    getUsers: function (req, res, next) {
+        var pageIndex = +req.query.pageIndex;
+        var pageSize = +req.query.pageSize;
+        adminDAO.findUsers({
+            from: (pageIndex - 1) * pageSize,
+            size: pageSize
+        }).then(function (users) {
+            users.pageIndex = pageIndex
+            res.send({ret: 0, data: users});
+        }).catch(function (err) {
+            res.send({ret: 1, message: err.message});
+        });
+        return next();
+    },
+    addUser: function (req, res, next) {
+        var u = req.body;
+        u.createDate = new Date();
+        if (u.password) u.password = md5(u.password);
+        adminDAO.insertUser(u).then(function (result) {
+            u.id = result.insertId;
+            res.send({ret: 0, data: u, message: '添加用户成功。'})
+        }).catch(function (err) {
+            res.send({ret: 1, message: err.message});
+        });
+        return next();
+    },
+    updateUser: function (req, res, next) {
+        var u = req.body;
+        if (u.password) u.password = md5(u.password);
+        adminDAO.updateUser(u).then(function (result) {
+            res.send({ret: 0, message: '修改用户成功。'})
+        }).catch(function (err) {
+            res.send({ret: 1, message: err.message});
+        });
+        return next();
+    },
+    removeUser: function (req, res, next) {
+        adminDAO.deleteUser(req.params.id).then(function (result) {
+            res.send({ret: 0, message: '删除用户成功。'})
+        }).catch(function (err) {
+            res.send({ret: 1, message: err.message});
+        });
+        return next();
+    },
+    getUserByUserName: function (req, res, next) {
+        adminDAO.findByUserName(req.params.userName).then(function (result) {
+            res.send({ret: 0, data: result && result.length});
         }).catch(function (err) {
             res.send({ret: 1, message: err.message});
         });

@@ -1,6 +1,5 @@
 'use strict';
 var md5 = require('md5');
-console.log(md5('111'));
 var restify = require('restify');
 var config = require('./config');
 var router = require('./common/router');

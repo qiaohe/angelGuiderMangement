@@ -1,5 +1,5 @@
 {
-  "name": "cloud platform admin",
+  "name": "cloud_platform_admin",
   "version": "0.0.1",
   "main": "server.js",
   "description": "云平台管理端",
@@ -7,6 +7,7 @@
   "dependencies": {
     "bluebird": "^2.10.2",
     "body-parser": "^1.14.1",
+    "chance": "^1.0.3",
     "i18n": "^0.5.0",
     "jpush-sdk": "^3.2.1",
     "jsonwebtoken": "^5.4.0",
@@ -14,8 +15,10 @@
     "md5": "^2.0.0",
     "moment": "^2.10.6",
     "mysql": "^2.9.0",
+    "qiniu": "^6.1.11",
     "redis": "^2.1.0",
     "request": "^2.65.0",
-    "restify": "^4.0.3"
+    "restify": "^4.0.3",
+    "rongcloud-sdk": "^1.0.3"
   }
 }

@@ -22,7 +22,7 @@ module.exports = {
     },
 
     findAll: function (page, conditions) {
-        var sql = conditions.length ? 'select SQL_CALC_FOUND_ROWS * from Hospital where ' + conditions.join(' and ') + ' order by createDate desc limit ?,?' : sqlMapping.hospital.findAll;
+        var sql = conditions.length ? 'select SQL_CALC_FOUND_ROWS h.*, a.availableBalance, a.balance from Hospital h left join Account a on h.id = a.uid and a.type = 1 where ' + conditions.join(' and ') + ' order by h.createDate desc limit ?,?' : sqlMapping.hospital.findAll;
         return db.queryWithCount(sql, [page.from, page.size])
     },
     insertRole: function (role) {
@@ -45,6 +45,16 @@ module.exports = {
     },
     findPeriods: function (hospitalId) {
         return db.query('select id from ShiftPeriod where hospitalId = ? order by name', hospitalId);
+    },
+    
+    findRegistrations: function (page, conditions) {
+        var sql = sqlMapping.hospital.findRegistrations;
+        if (conditions.length > 0)
+            sql = sql + ' and ' + conditions.join(' and ');
+        sql = sql + ' order by r.createDate desc limit ?, ?';
+        return db.queryWithCount(sql, [page.from, page.size]);
+    },
+    findAccount: function (accountNo) {
+        return db.query(sqlMapping.account.findByAccountNo, accountNo);
     }
-
 }
