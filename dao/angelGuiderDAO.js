@@ -31,5 +31,20 @@ module.exports = {
     },
     insertAccount: function (account) {
         return db.query(sqlMapping.account.insert, account);
+    },
+    findFeedback: function (page) {
+        return db.queryWithCount(sqlMapping.feedback.findFeedback, [page.from, page.size]);
+    },
+    updateFeedback: function (feedback) {
+        return db.query(sqlMapping.feedback.updateFeedback, [feedback, feedback.id]);
+    },
+    findGroupMessages: function (page) {
+        return db.queryWithCount(sqlMapping.angelGuider.findGroupMessages, [page.from, page.size]);
+    },
+    insertGroupMessage: function (g) {
+        return db.query(sqlMapping.angelGuider.insertGroupMessage, g);
+    },
+    findAngelGuiders: function (provId, cityId) {
+        return db.query(sqlMapping.angelGuider.findAngelGuiders, [provId, cityId]);
     }
 }

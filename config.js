@@ -15,7 +15,12 @@ module.exports = {
         debug: false,
         multipleStatements: true,
         dateStrings: true,
-        database: 'medicalDB'
+        database: 'medicalDB',
+        charset: 'UTF8MB4_GENERAL_CI'
+    },
+    jpush: {
+        appKey: "8daa305a57a2fe95621a3c7c",
+        masterSecret: "4c493872004cd346184165b2"
     },
     app: {
         locale: 'zh_CN',
@@ -64,7 +69,7 @@ module.exports = {
         '203': '药费佣金转入',
         '204': '诊疗费佣金转入',
         '205': '接洽费佣金转入',
-        '206': '充值转入',
+        '206': '充值转入'
     }
 };
 

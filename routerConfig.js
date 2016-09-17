@@ -171,6 +171,29 @@ module.exports = [
         path: "/api/users/userName/:userName",
         handler: authController.getUserByUserName,
         secured: 'user'
+    },
+    {
+        method: "get",
+        path: "/api/feedback",
+        handler: angelGuiderController.getFeedback,
+        secured: 'user'
+    },
+    {
+        method: "put",
+        path: "/api/feedback",
+        handler: angelGuiderController.updateFeedback,
+        secured: 'user'
+    },
+    {
+        method: "post",
+        path: "/api/groupMessages",
+        handler: angelGuiderController.addGroupMessage,
+        secured: 'user'
+    },
+    {
+        method: "get",
+        path: "/api/groupMessages",
+        handler: angelGuiderController.getGroupMessages,
+        secured: 'user'
     }
-
 ];

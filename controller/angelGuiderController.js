@@ -1,12 +1,12 @@
 "use strict";
 var config = require('../config');
 var _ = require('lodash');
-var md5 = require('md5');
 var angelGuiderDAO = require('../dao/angelGuiderDAO');
 var i18n = require('../i18n/localeMessage');
 var Promise = require('bluebird');
 var redis = require('../common/redisClient');
 var moment = require('moment');
+var pusher = require('../domain/NotificationPusher');
 module.exports = {
     addAngelGuider: function (req, res, next) {
         var angelGuider = req.body;
@@ -109,5 +109,65 @@ module.exports = {
         });
         return next();
     },
+    getFeedback: function (req, res, next) {
+        var pageIndex = +req.query.pageIndex;
+        var pageSize = +req.query.pageSize;
+        angelGuiderDAO.findFeedback({
+            from: (pageIndex - 1) * pageSize,
+            size: pageSize
+        }).then(function (fb) {
+            fb.pageIndex = pageIndex;
+            res.send({ret: 0, data: fb});
+        });
+        return next();
+    },
+    updateFeedback: function (req, res, next) {
+        var fb = req.body;
+        fb.treated = 1;
+        angelGuiderDAO.updateFeedback(fb).then(function (result) {
+            res.send({ret: 0, message: '更新处理意见成功。'})
+        }).catch(function (err) {
+            res.send({ret: 1, message: err.message})
+        });
+        return next();
+    },
+
+    addGroupMessage: function (req, res, next) {
+        var g = req.body;
+        g = _.assign(g, {createDate: new Date(), sender: req.user.id, senderName: req.user.realName});
+        angelGuiderDAO.addGroupMessage(g).then(function (result) {
+            g.id = result.insertId;
+            return angelGuiderDAO.findAngelGuiders(g.provId, g.cityId);
+        }).then(function (guiders) {
+            guiders && guiders.length && guiders.forEach(function (guider) {
+                pusher.push({
+                    body: gm.content,
+                    uid: guider.uid,
+                    title: g.title,
+                    type: 1,
+                    audience: {registration_id: [guider.token]}
+                }, function (err, result) {
+                    if (err) throw err;
+                });
+            });
+        }).catch(function (err) {
+            res.send({ret: 1, message: err.message});
+        });
+        return next();
+    },
+
+    getGroupMessages: function (req, res, next) {
+        var pageIndex = +req.query.pageIndex;
+        var pageSize = +req.query.pageSize;
+        angelGuiderDAO.findGroupMessages({
+            from: (pageIndex - 1) * pageSize,
+            size: pageSize
+        }).then(function (fb) {
+            fb.pageIndex = pageIndex;
+            res.send({ret: 0, data: fb});
+        });
+        return next();
+    }
+
 }
 

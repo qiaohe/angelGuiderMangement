@@ -6,8 +6,7 @@ module.exports = {
     push: function (notification, callback) {
         var client = JPush.buildClient(config.jpush.appKey, config.jpush.masterSecret);
         client.push().setPlatform(JPush.ALL)
-            .setAudience(notification.audience ? notification.audience : JPush.ALL).
-            setNotification(notification.body, JPush.ios(notification.title, 'default'), JPush.android(notification.body, notification.title, 1, notification.extra))
+            .setAudience(notification.audience ? notification.audience : JPush.ALL).setNotification(notification.body, JPush.ios(notification.title, 'default'), JPush.android(notification.body, notification.title, 1, notification.extra))
             .setOptions(null, null, null, true, null)
             .send(function (err, response) {
                 if (err) throw err;
@@ -19,11 +18,7 @@ module.exports = {
                     sendno: response.sendno,
                     msg_id: response.msg_id,
                     uid: notification.uid,
-                    patientName: notification.patientName,
-                    patientMobile: notification.patientMobile,
-                    type: notification.type,
-                    unread: 1,
-                    hospitalId: notification.hospitalId
+                    type: notification.type
                 }).then(function (result) {
                     return callback(err, result);
                 })
